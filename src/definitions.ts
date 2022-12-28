@@ -6,13 +6,13 @@ export interface Plant {
     sepalWidth: number;
     petalLength: number;
     petalWidth: number;
-    type: PlantType;
+    type: string;
 }
-enum PlantType {
-    Setosa = 0,
-    Versicolor = 1,
-    Virginica = 2,
-}
+// export enum PlantType {
+//     Setosa = 0,
+//     Versicolor = 1,
+//     Virginica = 2,
+// }
 
 // Three definition
 
