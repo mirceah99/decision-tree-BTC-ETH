@@ -1,2 +1,2 @@
-// please check form better options
+// please check for better options
 export default Papa;
