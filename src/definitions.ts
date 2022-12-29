@@ -24,6 +24,6 @@ export interface ThreeNode {
     threshold: number;
 
 
-    // leaf node 
+    // leaf node (majority value)
     value: any;
 }
