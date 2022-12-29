@@ -1,5 +1,6 @@
 import { readFromCVS } from "./readFromCVS.js"
 import { Plant } from "./definitions"
+import { createDecisionTree } from "./dataMining.js";
 const x: string = "Hello!";
 console.log(x);
 
@@ -18,5 +19,6 @@ async function loadData() {
         })
     }
     console.log(data);
+    createDecisionTree(data);
 }
 loadData();

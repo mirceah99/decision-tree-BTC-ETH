@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { readFromCVS } from "./readFromCVS.js";
+import { createDecisionTree } from "./dataMining.js";
 const x = "Hello!";
 console.log(x);
 function loadData() {
@@ -25,6 +26,7 @@ function loadData() {
             });
         }
         console.log(data);
+        createDecisionTree(data);
     });
 }
 loadData();
