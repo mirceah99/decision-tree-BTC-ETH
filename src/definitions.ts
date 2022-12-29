@@ -8,6 +8,7 @@ export interface Plant {
     petalWidth: number;
     type: string;
 }
+export type PlantAttributes = "sepalLength" | "sepalWidth" | "petalLength" | "petalWidth";
 // export enum PlantType {
 //     Setosa = 0,
 //     Versicolor = 1,
@@ -17,13 +18,21 @@ export interface Plant {
 // Three definition
 
 export interface ThreeNode {
-    left: ThreeNode | null;
-    right: ThreeNode | null;
-    infoGain: number;
-    featureIndex: string | number;
-    threshold: number;
+    left?: ThreeNode | null;
+    right?: ThreeNode | null;
+    infoGain?: number;
+    entropy?: number;
+    feature?: string | number;
+    threshold?: number;
+    id?: number;
 
 
     // leaf node (majority value)
-    value: any;
+    values: any;
+}
+export interface DifValues{
+    sepalLength: number[];
+    sepalWidth: number[];
+    petalLength: number[];
+    petalWidth: number[];
 }

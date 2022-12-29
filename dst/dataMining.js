@@ -1,8 +1,23 @@
-export function createDecisionTree(data) {
-    const three = [];
+const MAX_DEPTH = 3;
+let rootNode;
+export function createDecisionTree(data, depth) {
+    // try to create node for data 
     const difValues = findDiffValues(data);
-    console.log(difValues);
-    console.log('test', getBestSplit(difValues, data));
+    const node = createNode(data, difValues);
+    if (node)
+        node.id = Math.floor(Math.random() * 2000);
+    // if node is not possible or depth to big 
+    if (!node || depth > MAX_DEPTH)
+        return { values: evaluateValues(data), id: Math.floor(Math.random() * 2000) };
+    //split data by created node
+    const leftData = data.filter(plant => plant[node.feature] < node.threshold);
+    const rightData = data.filter(plant => plant[node.feature] >= node.threshold);
+    // console.log('node', node);
+    const leftNode = createDecisionTree(leftData, depth + 1);
+    const rightNode = createDecisionTree(rightData, depth + 1);
+    node.left = leftNode;
+    node.right = rightNode;
+    return node;
 }
 function findDiffValues(data) {
     const difValues = {
@@ -28,7 +43,7 @@ function getBestSplit(difValues, data) {
     const best = { feature: '', value: 0, entropy: Number.MAX_SAFE_INTEGER };
     for (let key in difValues) {
         if (!(key === "sepalLength" || key === "sepalWidth" || key === "petalLength" || key === "petalWidth"))
-            return;
+            throw 'err, key is not correct';
         for (let value of difValues[key]) {
             const newEntropy = getEntropy(data, key, value);
             if (newEntropy < best.entropy) {
@@ -67,4 +82,32 @@ function getEntropyFromArray(array) {
     });
     return Object.values(types)
         .reduce((sum, f) => sum - f / len * Math.log2(f / len), 0);
+}
+function createNode(dataSet, difValues) {
+    const bestSplit = getBestSplit(difValues, dataSet);
+    if (bestSplit.entropy === 0)
+        return null;
+    return {
+        left: null,
+        right: null,
+        entropy: bestSplit.entropy,
+        feature: bestSplit.feature,
+        values: evaluateValues(dataSet),
+        threshold: bestSplit.value
+    };
+}
+function evaluateValues(dataSet) {
+    const types = {};
+    const len = dataSet.length;
+    dataSet.forEach((plant) => {
+        if (types[plant.type] === undefined) {
+            types[plant.type] = 1;
+        }
+        else
+            types[plant.type]++;
+    });
+    for (let key in types) {
+        types[key] /= len * 0.01;
+    }
+    return types;
 }

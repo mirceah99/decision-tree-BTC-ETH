@@ -7,8 +7,17 @@
     <title>BTC & ETH Price Prediction</title>
     <script  src="./lib/papaparse.min.js"></script>
     <script type="module" src="./dst/index.js" defer></script>
+    <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-    
+    <div class="upload-file">
+        <label for="myfile">Please upload a CVS to build your tree:</label>
+        <input type="file" id="myfile" name="myfile" accept=".csv">
+        <button id="calculate">Calculate tree</button>
+    </div>
+        <div class="tree">
+        <ul id="tree">
+        </ul>
+    </div>
 </body>
 </html>

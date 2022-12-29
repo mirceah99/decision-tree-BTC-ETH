@@ -1,20 +1,33 @@
-import { Plant, ThreeNode } from "./definitions";
-
-export function createDecisionTree(data: Plant[]) {
-    const three: ThreeNode[] = [];
+import { Plant, ThreeNode, DifValues, PlantAttributes} from "./definitions";
+const MAX_DEPTH = 3;
+let rootNode: ThreeNode; 
+export function createDecisionTree(data: Plant[], depth: number) {
+    
+    // try to create node for data 
     const difValues = findDiffValues(data);
-    console.log(difValues);
-    console.log('test',getBestSplit(difValues, data));
+    const node = createNode(data, difValues);
+    if(node) node.id = Math.floor(Math.random()* 2000); 
+
+    // if node is not possible or depth to big 
+    if( !node || depth > MAX_DEPTH ) return {values: evaluateValues(data), id :  Math.floor(Math.random()* 2000)};
+
+
+
+    //split data by created node
+    const leftData = data.filter(plant => plant[node.feature as PlantAttributes]< node.threshold!);
+    const rightData = data.filter(plant => plant[node.feature as PlantAttributes]>= node.threshold!);
+
+    // console.log('node', node);
+    const leftNode = createDecisionTree(leftData, depth + 1);
+    const rightNode = createDecisionTree(rightData, depth + 1);
+    node.left = leftNode;
+    node.right = rightNode;
+    return node;
 }
 
 
 function findDiffValues(data: Plant[]) {
-    const difValues: {
-        sepalLength: number[];
-        sepalWidth: number[];
-        petalLength: number[];
-        petalWidth: number[];
-    } = {
+    const difValues: DifValues = {
         sepalLength: [],
         sepalWidth: [],
         petalLength: [],
@@ -34,16 +47,10 @@ function findDiffValues(data: Plant[]) {
     return difValues;
 }
 
-
-function getBestSplit(difValues: {
-    sepalLength: number[];
-    sepalWidth: number[];
-    petalLength: number[];
-    petalWidth: number[];
-}, data: Plant[]) {
+function getBestSplit(difValues: DifValues, data: Plant[]): { feature: string, value: number, entropy: number } {
     const best = { feature: '', value: 0, entropy: Number.MAX_SAFE_INTEGER };
     for (let key in difValues) {
-        if (!(key === "sepalLength" || key === "sepalWidth" || key === "petalLength" || key === "petalWidth")) return;
+        if (!(key === "sepalLength" || key === "sepalWidth" || key === "petalLength" || key === "petalWidth")) throw 'err, key is not correct';
         for (let value of difValues[key]) {
             const newEntropy = getEntropy(data, key, value);
             if (newEntropy < best.entropy) {
@@ -85,3 +92,31 @@ function getEntropyFromArray(array: Plant[]): any {
 
 }
 
+function createNode(dataSet: Plant[], difValues: DifValues): ThreeNode | null {
+
+    const bestSplit = getBestSplit(difValues, dataSet);
+    if (bestSplit.entropy === 0) return null;
+    return {
+        left: null,
+        right: null,
+        entropy: bestSplit.entropy,
+        feature: bestSplit.feature,
+        values: evaluateValues(dataSet),
+        threshold: bestSplit.value
+    }
+}
+
+
+function evaluateValues(dataSet: Plant[]) {
+    const types: any = {};
+    const len = dataSet.length;
+    dataSet.forEach((plant) => {
+        if (types[plant.type] === undefined) {
+            types[plant.type] = 1;
+        } else types[plant.type]++;
+    })
+    for (let key in types) {
+        types[key] /= len * 0.01;
+    }
+    return types;
+}

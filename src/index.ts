@@ -1,12 +1,11 @@
-import { readFromCVS } from "./readFromCVS.js"
+import { readFromCVSInputFile } from "./readFromCVS.js"
 import { Plant } from "./definitions"
 import { createDecisionTree } from "./dataMining.js";
-const x: string = "Hello!";
-console.log(x);
+import { displayTree } from "./UI.js";
 
-
+const calculateButton = document.getElementById('calculate') as HTMLButtonElement;
 async function loadData() {
-    const cvsData = await readFromCVS('/data/iris.csv') as { data: string[][] };
+    const cvsData = await readFromCVSInputFile('myfile') as { data: string[][] };
     const data: Plant[] = [];
     for (let i = 1; i < cvsData.data.length; i++) {
         const array = cvsData.data[i];
@@ -18,7 +17,8 @@ async function loadData() {
             type: array[4],
         })
     }
-    console.log(data);
-    createDecisionTree(data);
+    const decisionTree = createDecisionTree(data, 1);
+    console.log('Three: ', decisionTree);
+    displayTree('tree', decisionTree);
 }
-loadData();
+calculateButton.addEventListener("click",loadData);
