@@ -14,8 +14,24 @@
         <label for="myfile">Please upload a CVS to build your tree:</label>
         <input type="file" id="myfile" name="myfile" accept=".csv">
         <button id="calculate">Calculate tree</button>
+        <Span> Three deep:</Span>
+        <input id="deep" type="number" min="1" max="100" value="3" step="1">
     </div>
-        <div class="tree">
+    <div class="upload-file" id="get-prediction" style="display: none;">
+        <p> Get prediction: </p>
+        <br>
+        <div class="prediction-placeholder">
+            <div id="inputs-placeholder">
+            </div>
+            <div>
+                <h3>Result:</h3>
+                <h5 id="prediction-result" class="prediction"></h5>
+            </div>
+        </div>
+        <br>
+        <button id="calculate-rediction">Calculate prediction</button>
+    </div>
+    <div class="tree">
         <ul id="tree">
         </ul>
     </div>

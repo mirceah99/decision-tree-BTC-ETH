@@ -1,4 +1,4 @@
-const MAX_DEPTH = 3;
+export let config = { MAX_DEPTH: 3 };
 let rootNode;
 export function createDecisionTree(data, depth) {
     // try to create node for data 
@@ -7,7 +7,7 @@ export function createDecisionTree(data, depth) {
     if (node)
         node.id = Math.floor(Math.random() * 2000);
     // if node is not possible or depth to big 
-    if (!node || depth > MAX_DEPTH)
+    if (!node || depth > config.MAX_DEPTH)
         return { values: evaluateValues(data), id: Math.floor(Math.random() * 2000) };
     //split data by created node
     const leftData = data.filter(plant => plant[node.feature] < node.threshold);

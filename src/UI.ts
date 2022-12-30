@@ -1,4 +1,7 @@
 import { ThreeNode } from "./definitions";
+
+const getPredictionPlaceholder = document.getElementById('get-prediction') as HTMLElement;
+
 export function displayTree(parentId: string, rootNode: ThreeNode, resultOf?: string) {
     const parent = document.getElementById(parentId)!;
     const resultOfText = resultOf ? `<p>Passed condition: ${resultOf}</p>` : '';
@@ -34,4 +37,21 @@ export function displayTree(parentId: string, rootNode: ThreeNode, resultOf?: st
     rootNode.right && displayTree(`node-${rootNode.id}-content`, rootNode.right, `${rootNode.feature} >= ${rootNode.threshold}`);
 
 
+}
+export const  hideTree = (parentId: string) => document.getElementById(parentId)!.innerHTML = "";
+
+export function generatePredictionInputs(attributes: string[]){
+    getPredictionPlaceholder.style.display = 'block';
+    addInputs(attributes);
+}
+
+function addInputs(attributes: string[]){
+    const placeholder = document.getElementById('inputs-placeholder') as HTMLElement;
+    placeholder.innerHTML = "";
+    attributes.forEach((attributeName)=>{
+        const input = ` <label for="${attributeName}">${attributeName}:</label>
+                        <input type="number" id="${attributeName}">
+                        <br><br>`;
+        placeholder.innerHTML += input;
+    })
 }

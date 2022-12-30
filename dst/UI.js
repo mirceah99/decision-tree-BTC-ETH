@@ -1,3 +1,4 @@
+const getPredictionPlaceholder = document.getElementById('get-prediction');
 export function displayTree(parentId, rootNode, resultOf) {
     const parent = document.getElementById(parentId);
     const resultOfText = resultOf ? `<p>Passed condition: ${resultOf}</p>` : '';
@@ -29,4 +30,19 @@ export function displayTree(parentId, rootNode, resultOf) {
                   `;
     rootNode.left && displayTree(`node-${rootNode.id}-content`, rootNode.left, `${rootNode.feature} < ${rootNode.threshold}`);
     rootNode.right && displayTree(`node-${rootNode.id}-content`, rootNode.right, `${rootNode.feature} >= ${rootNode.threshold}`);
+}
+export const hideTree = (parentId) => document.getElementById(parentId).innerHTML = "";
+export function generatePredictionInputs(attributes) {
+    getPredictionPlaceholder.style.display = 'block';
+    addInputs(attributes);
+}
+function addInputs(attributes) {
+    const placeholder = document.getElementById('inputs-placeholder');
+    placeholder.innerHTML = "";
+    attributes.forEach((attributeName) => {
+        const input = ` <label for="${attributeName}">${attributeName}:</label>
+                        <input type="number" id="${attributeName}">
+                        <br><br>`;
+        placeholder.innerHTML += input;
+    });
 }

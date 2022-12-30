@@ -1,5 +1,5 @@
 import { Plant, ThreeNode, DifValues, PlantAttributes} from "./definitions";
-const MAX_DEPTH = 3;
+export let config = { MAX_DEPTH: 3};
 let rootNode: ThreeNode; 
 export function createDecisionTree(data: Plant[], depth: number) {
     
@@ -9,7 +9,7 @@ export function createDecisionTree(data: Plant[], depth: number) {
     if(node) node.id = Math.floor(Math.random()* 2000); 
 
     // if node is not possible or depth to big 
-    if( !node || depth > MAX_DEPTH ) return {values: evaluateValues(data), id :  Math.floor(Math.random()* 2000)};
+    if( !node || depth > config.MAX_DEPTH ) return {values: evaluateValues(data), id :  Math.floor(Math.random()* 2000)};
 
 
 
