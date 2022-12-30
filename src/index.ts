@@ -1,7 +1,7 @@
 import { readFromCVSInputFile } from "./readFromCVS.js"
 import { ThreeNode } from "./definitions"
 import { createDecisionTree, config, getPrediction, calculateSuccessRate} from "./dataMining.js";
-import { displayTree, hideTree, generatePredictionInputs, getInputsPlaceholder, displayPrediction, displaySuccessRate } from "./UI.js";
+import { displayTree, hideTree, generatePredictionInputs, getInputsPlaceholder, displayPrediction, displaySuccessRate, setSampleCvsLink } from "./UI.js";
 
 let decisionTree: ThreeNode;
 const calculateTree = document.getElementById('calculate') as HTMLButtonElement;
@@ -48,3 +48,5 @@ calculatePredictionBtn.addEventListener("click", calculatePrediction);
 cvsSwitch?.addEventListener('change',function(ev){
     displayCvs.classList.toggle("hidden");
 })
+
+setSampleCvsLink();

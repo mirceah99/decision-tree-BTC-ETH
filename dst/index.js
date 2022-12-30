@@ -1,6 +1,6 @@
 import { readFromCVSInputFile } from "./readFromCVS.js";
 import { createDecisionTree, config, getPrediction, calculateSuccessRate } from "./dataMining.js";
-import { displayTree, hideTree, generatePredictionInputs, getInputsPlaceholder, displayPrediction, displaySuccessRate } from "./UI.js";
+import { displayTree, hideTree, generatePredictionInputs, getInputsPlaceholder, displayPrediction, displaySuccessRate, setSampleCvsLink } from "./UI.js";
 let decisionTree;
 const calculateTree = document.getElementById('calculate');
 const calculatePredictionBtn = document.getElementById('calculate-prediction');
@@ -42,3 +42,4 @@ calculatePredictionBtn.addEventListener("click", calculatePrediction);
 cvsSwitch === null || cvsSwitch === void 0 ? void 0 : cvsSwitch.addEventListener('change', function (ev) {
     displayCvs.classList.toggle("hidden");
 });
+setSampleCvsLink();

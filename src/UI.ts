@@ -75,3 +75,7 @@ export function displaySuccessRate(rate: number){
     placeholder.style.display = 'block';
     placeholder.innerHTML =  `Success rate on training data: ${rate.toFixed(2)}`;
 }
+export function setSampleCvsLink(){
+    const link = document.getElementById('download-sample-cvs') as HTMLAnchorElement;
+    link.href = document.location.href + 'data/iris.csv';
+}
