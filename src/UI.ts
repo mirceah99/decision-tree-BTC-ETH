@@ -1,7 +1,9 @@
 import { ThreeNode } from "./definitions";
 
 const getPredictionPlaceholder = document.getElementById('get-prediction') as HTMLElement;
-
+const inputsPlaceholder = document.getElementById('inputs-placeholder') as HTMLElement;
+const predictionResult = document.getElementById('prediction-result')!;
+const predictionDiv = document.getElementById('prediction-div')!;
 export function displayTree(parentId: string, rootNode: ThreeNode, resultOf?: string) {
     const parent = document.getElementById(parentId)!;
     const resultOfText = resultOf ? `<p>Passed condition: ${resultOf}</p>` : '';
@@ -17,7 +19,7 @@ export function displayTree(parentId: string, rootNode: ThreeNode, resultOf?: st
             prediction = key;
         }
         values += '<table>';
-        values += ` <tr> <th> ${key}: </th> <th class="fix-width">${rootNode.values[key].toFixed(2)} %</th> </tr>`
+        values += ` <tr> <th> ${key} (${rootNode.valuesRaw[key]}/${rootNode.valuesRaw.total}): </th> <th class="fix-width">${rootNode.values[key].toFixed(2)} %</th> </tr>`
         values += '</table>';
 
     }
@@ -46,12 +48,30 @@ export function generatePredictionInputs(attributes: string[]){
 }
 
 function addInputs(attributes: string[]){
-    const placeholder = document.getElementById('inputs-placeholder') as HTMLElement;
-    placeholder.innerHTML = "";
+    
+    inputsPlaceholder.innerHTML = "";
     attributes.forEach((attributeName)=>{
         const input = ` <label for="${attributeName}">${attributeName}:</label>
                         <input type="number" id="${attributeName}">
                         <br><br>`;
-        placeholder.innerHTML += input;
+        inputsPlaceholder.innerHTML += input;
     })
+}
+
+export function getInputsPlaceholder(){
+    const inputs: any = {};
+    inputsPlaceholder.querySelectorAll('input').forEach((elem)=>{
+        inputs[elem.id] = elem.value;
+    });
+    return inputs;
+}
+
+export function displayPrediction(prediction: string){
+    predictionDiv.style.display = 'block';
+    predictionResult.innerHTML = prediction;
+}
+export function displaySuccessRate(rate: number){
+    const placeholder = document.getElementById('tree-success-rate')!;
+    placeholder.style.display = 'block';
+    placeholder.innerHTML =  `Success rate on training data: ${rate.toFixed(2)}`;
 }

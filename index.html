@@ -16,20 +16,29 @@
         <button id="calculate">Calculate tree</button>
         <Span> Three deep:</Span>
         <input id="deep" type="number" min="1" max="100" value="3" step="1">
+        <br>
+        <h2 id="tree-success-rate" style="display: none;"></h2>
+        <br>
+        <a href="/data/iris.csv">Sample cvs</a>
+        <br>
+        <br>
+        <label for="display-cvs">Display cvs:</label>
+        <input type="checkbox" id="display-cvs">
     </div>
+    <pre id="my-cvs" class="hidden"></pre>
     <div class="upload-file" id="get-prediction" style="display: none;">
         <p> Get prediction: </p>
         <br>
         <div class="prediction-placeholder">
             <div id="inputs-placeholder">
             </div>
-            <div>
-                <h3>Result:</h3>
-                <h5 id="prediction-result" class="prediction"></h5>
+            <div id="prediction-div" style="display: none; text-align: center; padding-left: 50px;">
+                <h1>Result:</h1>
+                <h2 id="prediction-result" class="prediction"></h2>
             </div>
         </div>
         <br>
-        <button id="calculate-rediction">Calculate prediction</button>
+        <button id="calculate-prediction">Calculate prediction</button>
     </div>
     <div class="tree">
         <ul id="tree">

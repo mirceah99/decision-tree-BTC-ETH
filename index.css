@@ -176,3 +176,14 @@ tr:nth-child(even) {
 .prediction-placeholder{
     display: flex;
 }
+.hidden{
+    display: none;
+}
+pre{
+    background-color: #bbb;
+    margin: 30px;
+    padding: 10px;
+    border: 1px black solid;
+    max-height: 80vh;
+    overflow: scroll;
+}

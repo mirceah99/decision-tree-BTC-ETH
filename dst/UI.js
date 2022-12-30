@@ -1,4 +1,7 @@
 const getPredictionPlaceholder = document.getElementById('get-prediction');
+const inputsPlaceholder = document.getElementById('inputs-placeholder');
+const predictionResult = document.getElementById('prediction-result');
+const predictionDiv = document.getElementById('prediction-div');
 export function displayTree(parentId, rootNode, resultOf) {
     const parent = document.getElementById(parentId);
     const resultOfText = resultOf ? `<p>Passed condition: ${resultOf}</p>` : '';
@@ -14,7 +17,7 @@ export function displayTree(parentId, rootNode, resultOf) {
             prediction = key;
         }
         values += '<table>';
-        values += ` <tr> <th> ${key}: </th> <th class="fix-width">${rootNode.values[key].toFixed(2)} %</th> </tr>`;
+        values += ` <tr> <th> ${key} (${rootNode.valuesRaw[key]}/${rootNode.valuesRaw.total}): </th> <th class="fix-width">${rootNode.values[key].toFixed(2)} %</th> </tr>`;
         values += '</table>';
     }
     parent.innerHTML += `
@@ -37,12 +40,27 @@ export function generatePredictionInputs(attributes) {
     addInputs(attributes);
 }
 function addInputs(attributes) {
-    const placeholder = document.getElementById('inputs-placeholder');
-    placeholder.innerHTML = "";
+    inputsPlaceholder.innerHTML = "";
     attributes.forEach((attributeName) => {
         const input = ` <label for="${attributeName}">${attributeName}:</label>
                         <input type="number" id="${attributeName}">
                         <br><br>`;
-        placeholder.innerHTML += input;
+        inputsPlaceholder.innerHTML += input;
     });
+}
+export function getInputsPlaceholder() {
+    const inputs = {};
+    inputsPlaceholder.querySelectorAll('input').forEach((elem) => {
+        inputs[elem.id] = elem.value;
+    });
+    return inputs;
+}
+export function displayPrediction(prediction) {
+    predictionDiv.style.display = 'block';
+    predictionResult.innerHTML = prediction;
+}
+export function displaySuccessRate(rate) {
+    const placeholder = document.getElementById('tree-success-rate');
+    placeholder.style.display = 'block';
+    placeholder.innerHTML = `Success rate on training data: ${rate.toFixed(2)}`;
 }

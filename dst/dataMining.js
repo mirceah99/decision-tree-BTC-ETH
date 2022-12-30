@@ -8,10 +8,10 @@ export function createDecisionTree(data, depth) {
         node.id = Math.floor(Math.random() * 2000);
     // if node is not possible or depth to big 
     if (!node || depth > config.MAX_DEPTH)
-        return { values: evaluateValues(data), id: Math.floor(Math.random() * 2000) };
+        return { values: evaluateValues(data), valuesRaw: evaluateValuesRaw(data), id: Math.floor(Math.random() * 2000) };
     //split data by created node
-    const leftData = data.filter(plant => plant[node.feature] < node.threshold);
-    const rightData = data.filter(plant => plant[node.feature] >= node.threshold);
+    const leftData = data.filter(obj => obj[node.feature] < node.threshold);
+    const rightData = data.filter(obj => obj[node.feature] >= node.threshold);
     // console.log('node', node);
     const leftNode = createDecisionTree(leftData, depth + 1);
     const rightNode = createDecisionTree(rightData, depth + 1);
@@ -20,21 +20,16 @@ export function createDecisionTree(data, depth) {
     return node;
 }
 function findDiffValues(data) {
-    const difValues = {
-        sepalLength: [],
-        sepalWidth: [],
-        petalLength: [],
-        petalWidth: []
-    };
-    data.forEach((plant) => {
-        for (let key in plant) {
+    const difValues = {};
+    data.forEach((object) => {
+        for (let key in object) {
             if (key === "type")
                 continue;
-            if (key === "sepalLength" || key === "sepalWidth" || key === "petalLength" || key === "petalWidth") {
-                const value = plant[key];
-                if (difValues[key].indexOf(value) < 0)
-                    difValues[key].push(value);
-            }
+            const value = object[key];
+            if (!difValues[key])
+                difValues[key] = [];
+            if (difValues[key].indexOf(value) < 0)
+                difValues[key].push(value);
         }
     });
     return difValues;
@@ -42,8 +37,6 @@ function findDiffValues(data) {
 function getBestSplit(difValues, data) {
     const best = { feature: '', value: 0, entropy: Number.MAX_SAFE_INTEGER };
     for (let key in difValues) {
-        if (!(key === "sepalLength" || key === "sepalWidth" || key === "petalLength" || key === "petalWidth"))
-            throw 'err, key is not correct';
         for (let value of difValues[key]) {
             const newEntropy = getEntropy(data, key, value);
             if (newEntropy < best.entropy) {
@@ -56,15 +49,13 @@ function getBestSplit(difValues, data) {
     return best;
 }
 function getEntropy(dataFrame, feature, value) {
-    if (!(feature === "sepalLength" || feature === "sepalWidth" || feature === "petalLength" || feature === "petalWidth"))
-        return -1;
     const leftData = [];
     const rightData = [];
-    for (const plant of dataFrame) {
-        if (plant[feature] < value)
-            leftData.push(plant);
+    for (const obj of dataFrame) {
+        if (obj[feature] < value)
+            leftData.push(obj);
         else
-            rightData.push(plant);
+            rightData.push(obj);
     }
     const leftProportion = leftData.length / dataFrame.length;
     const rightProportion = rightData.length / dataFrame.length;
@@ -73,12 +64,12 @@ function getEntropy(dataFrame, feature, value) {
 function getEntropyFromArray(array) {
     const types = {};
     const len = array.length;
-    array.forEach((plant) => {
-        if (types[plant.type] === undefined) {
-            types[plant.type] = 1;
+    array.forEach((obj) => {
+        if (types[obj.type] === undefined) {
+            types[obj.type] = 1;
         }
         else
-            types[plant.type]++;
+            types[obj.type]++;
     });
     return Object.values(types)
         .reduce((sum, f) => sum - f / len * Math.log2(f / len), 0);
@@ -93,21 +84,65 @@ function createNode(dataSet, difValues) {
         entropy: bestSplit.entropy,
         feature: bestSplit.feature,
         values: evaluateValues(dataSet),
-        threshold: bestSplit.value
+        threshold: bestSplit.value,
+        valuesRaw: evaluateValuesRaw(dataSet)
     };
 }
 function evaluateValues(dataSet) {
     const types = {};
     const len = dataSet.length;
-    dataSet.forEach((plant) => {
-        if (types[plant.type] === undefined) {
-            types[plant.type] = 1;
+    dataSet.forEach((obj) => {
+        if (types[obj.type] === undefined) {
+            types[obj.type] = 1;
         }
         else
-            types[plant.type]++;
+            types[obj.type]++;
     });
     for (let key in types) {
         types[key] /= len * 0.01;
     }
     return types;
+}
+function evaluateValuesRaw(dataSet) {
+    const types = {};
+    const len = dataSet.length;
+    dataSet.forEach((obj) => {
+        if (types[obj.type] === undefined) {
+            types[obj.type] = 1;
+        }
+        else
+            types[obj.type]++;
+    });
+    types.total = len;
+    return types;
+}
+export function getPrediction(three, inputs) {
+    let nodeLocation = three;
+    while (nodeLocation.left && nodeLocation.right) {
+        if (nodeLocation.feature === undefined || nodeLocation.threshold === undefined)
+            return "Prediction error";
+        if (+inputs[nodeLocation.feature] < nodeLocation.threshold) {
+            nodeLocation = nodeLocation.left;
+        }
+        else
+            nodeLocation = nodeLocation.right;
+    }
+    let text = "";
+    let max = 0;
+    for (let key in nodeLocation.values) {
+        if (nodeLocation.values[key] > max) {
+            max = nodeLocation.values[key];
+            text = key;
+        }
+    }
+    return text;
+}
+export function calculateSuccessRate(three, data) {
+    const total = data.length;
+    let success = 0;
+    for (let i = 0; i < data.length; i++) {
+        if (getPrediction(three, data[i]) === data[i].type)
+            success++;
+    }
+    return (success / total) * 100;
 }
