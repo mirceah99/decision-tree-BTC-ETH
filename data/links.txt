@@ -1,0 +1,12 @@
+google trends - https://trends.google.com/trends/explore?date=today%205-y&geo=US&q=bitcoin
+fear & gread index - https://pyinvesting.com/fear-and-greed/
+Month-over-month (%) - https://www.in2013dollars.com/bitcoin-price
+
+type -- = >= -15% month over month
+
+type ++ = <= +15% month over mont
+
+type const == price affected less than 15%
+
+btc data : 
+"12/22",59,-9.75,-17.17,
